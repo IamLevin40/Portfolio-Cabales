@@ -5,7 +5,7 @@
   --color-primary: #393F8A;
   --color-secondary: #65558D;
   --color-neon: #1aaef3;
-  --color-neon-secondary: #f51e50;
+  --color-neon-secondary: #ff27d7;
   --color-accent: #7c3aed;
   --text-white: #ffffff;
   --text-light: #e0e0e0;
@@ -13,8 +13,8 @@
   --nav-bg: rgba(33, 33, 46, 0.95);
   --card-bg: rgba(57, 63, 138, 0.1);
   --border-color: rgba(101, 85, 141, 0.3);
-  --shadow-neon: 0 0 8px rgba(11, 206, 232, 0.3);
-  --shadow-neon-pink: 0 0 8px rgba(223, 18, 121, 0.3);
+  --shadow-neon: 0 0 8px rgba(16, 152, 170, 0.8);
+  --shadow-neon-pink: 0 0 8px rgba(253, 45, 118, 0.8);
   
   /* Light Theme Colors */
   --bg-primary-light: #f1f3f7;
@@ -742,6 +742,11 @@ body::before {
   padding: var(--spacing-xxl) 0 var(--spacing-lg);
   margin-top: var(--spacing-xxl);
   backdrop-filter: blur(10px);
+}
+
+/* Light mode: use a solid background for footer (no gradient) */
+[data-theme="light"] .footer {
+  background: var(--bg-primary) !important;
 }
 
 .footer-container {

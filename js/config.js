@@ -11,7 +11,7 @@ const PORTFOLIO_CONFIG = {
   name: "Lean Vince Cabales",
   subtitle: "3rd Year Computer Science Student at West Visayas State University",
   email: "levincabales40@gmail.com",
-  phone: "+63 960 603 5956", // Add your phone number
+  phone: "+63 960 603 5956",
   
   // Contact Information
   contact: {
@@ -20,7 +20,7 @@ const PORTFOLIO_CONFIG = {
     location: "Maloco, Ibajay, Philippines"
   },
   
-  // Social Media Links (Replace with your actual profiles)
+  // Social Media Links
   social: {
     facebook: "https://web.facebook.com/leanvincecabales",
     youtube: "https://www.youtube.com/@leanvincecabales6982", 
@@ -48,7 +48,7 @@ const PORTFOLIO_CONFIG = {
       learnings: "???"
     },
     {
-      id: 1,
+      id: 2,
       title: "Rooted",
       description: "An Educational Word-Building Combat Game with Environmental Themes.",
       image: "assets/images/project_bg_rooted.png",
@@ -64,7 +64,7 @@ const PORTFOLIO_CONFIG = {
       learnings: "???"
     },
     {
-      id: 1,
+      id: 3,
       title: "Rooted",
       description: "An Educational Word-Building Combat Game with Environmental Themes.",
       image: "assets/images/project_bg_rooted.png",
