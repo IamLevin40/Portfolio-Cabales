@@ -35,25 +35,53 @@ const PORTFOLIO_CONFIG = {
       id: 1,
       title: "Rooted",
       description: "An Educational Word-Building Combat Game with Environmental Themes.",
-      image: "assets/images/project1.jpg",
+      image: "assets/images/project_bg_rooted.png",
       technologies: ["Unity", "C#"],
       liveUrl: "#",
       githubUrl: "https://github.com/IamLevin40/Rooted",
       featured: true,
       fullDescription: "Rooted is a single-player, arcade-style educational game that merges word-building mechanics with environmental action and turn-based combat. Players battle eco-threats by forming new words from root words through the strategic use of prefixes and suffixes. Each valid word becomes an attack, with environmental words dealing double damage and triggering special effects.",
       features: [
-        "Real-time space mission data",
-        "Interactive 3D spacecraft models",
-        "Cyberpunk-themed UI design",
-        "Responsive dashboard layout",
-        "Data visualization charts"
+        "???"
       ],
-      challenges: "The main challenge was creating smooth 3D animations while maintaining performance across devices. Solved by implementing efficient rendering techniques and progressive loading.",
-      learnings: "Gained deep understanding of 3D web graphics, performance optimization, and creating immersive user interfaces that blend functionality with aesthetic appeal."
+      challenges: "???",
+      learnings: "???"
+    },
+    {
+      id: 1,
+      title: "Rooted",
+      description: "An Educational Word-Building Combat Game with Environmental Themes.",
+      image: "assets/images/project_bg_rooted.png",
+      technologies: ["Unity", "C#"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/IamLevin40/Rooted",
+      featured: true,
+      fullDescription: "Rooted is a single-player, arcade-style educational game that merges word-building mechanics with environmental action and turn-based combat. Players battle eco-threats by forming new words from root words through the strategic use of prefixes and suffixes. Each valid word becomes an attack, with environmental words dealing double damage and triggering special effects.",
+      features: [
+        "???"
+      ],
+      challenges: "???",
+      learnings: "???"
+    },
+    {
+      id: 1,
+      title: "Rooted",
+      description: "An Educational Word-Building Combat Game with Environmental Themes.",
+      image: "assets/images/project_bg_rooted.png",
+      technologies: ["Unity", "C#"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/IamLevin40/Rooted",
+      featured: true,
+      fullDescription: "Rooted is a single-player, arcade-style educational game that merges word-building mechanics with environmental action and turn-based combat. Players battle eco-threats by forming new words from root words through the strategic use of prefixes and suffixes. Each valid word becomes an attack, with environmental words dealing double damage and triggering special effects.",
+      features: [
+        "???"
+      ],
+      challenges: "???",
+      learnings: "???"
     },
   ],
   
-  // Color Scheme (You can modify these)
+  // Color Scheme
   colors: {
     primary: "#393F8A",
     secondary: "#65558D", 
