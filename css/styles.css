@@ -220,7 +220,7 @@ body::before {
 }
 
 .nav-link {
-  color: var(--color-neon);
+  color: var(--text-white); /* Always white text */
   text-decoration: none;
   font-size: var(--font-size-base);
   font-weight: 500;
@@ -229,24 +229,33 @@ body::before {
   transition: color var(--transition-fast);
 }
 
+
+/* Underline hidden by default; animate with left-to-right wipe using scaleX */
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: -1px; /* slightly below the text */
   left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-neon-secondary), var(--color-neon));
-  transition: width var(--transition-normal);
+  width: 100%;
+  height: 4px; /* thicker line */
+  background: var(--color-neon); /* base color when visible (single hue) */
+  transform: scaleX(0);
+  transform-origin: left center; /* wipe left -> right on reveal */
+  transition: transform var(--transition-normal), background-color var(--transition-normal), opacity var(--transition-normal);
+  border-radius: 4px;
+  opacity: 0; /* fully hidden by default */
 }
 
 .nav-link:hover::after {
-  width: 100%;
+  transform: scaleX(1);
+  opacity: 1;
+  background: var(--color-neon-secondary); /* single-hue neon-secondary on hover */
 }
 
+/* Ensure link text doesn't change color on hover */
 .nav-link:hover {
-  color: var(--color-neon-secondary);
-  text-shadow: 0 0 8px var(--color-neon-secondary);
+  color: var(--text-white);
+  text-shadow: none;
 }
 
 .theme-toggle {
