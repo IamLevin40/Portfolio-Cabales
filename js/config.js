@@ -1,8 +1,5 @@
 /* 
   Portfolio Configuration File
-  
-  This file contains all customizable variables for easy maintenance.
-  Update these values to personalize your portfolio without diving into the main code.
 */
 
 // ===== PERSONAL INFORMATION =====
