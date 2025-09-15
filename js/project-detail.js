@@ -43,6 +43,10 @@ class ProjectDetailManager {
         this.currentProject = window.PORTFOLIO_CONFIG.projects.find(
             project => project.id === parseInt(projectId)
         );
+
+        console.log('ProjectDetail: requested id=', projectId);
+        console.log('ProjectDetail: PORTFOLIO_CONFIG.projects=', window.PORTFOLIO_CONFIG?.projects);
+        console.log('ProjectDetail: found project=', this.currentProject);
         
         if (!this.currentProject) {
             this.showError('Project not found');
@@ -82,13 +86,25 @@ class ProjectDetailManager {
             liveLink.style.display = 'none';
         }
         
+        console.log('ProjectDetail: populating project data for', project.id);
+
         // Update image
         const projectImage = document.getElementById('projectImage');
         projectImage.src = `../${project.image}`;
         projectImage.alt = project.title;
-        
-        // Update description (using the basic description for now)
-        document.getElementById('projectDescription').textContent = project.description;
+
+        // Update description: prefer fullDescription if provided in config
+        const descriptionEl = document.getElementById('projectDescription');
+        const hasFull = project.fullDescription && project.fullDescription.trim().length > 0 && project.fullDescription !== '???';
+        console.log('ProjectDetail: hasFullDescription=', hasFull);
+        if (hasFull) {
+            // Render as simple HTML (preserve paragraphs/newlines). We keep this simple; if you want richer HTML support we can sanitize later.
+            descriptionEl.innerHTML = project.fullDescription.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+        } else if (project.description) {
+            descriptionEl.textContent = project.description;
+        } else {
+            descriptionEl.textContent = 'No description available for this project.';
+        }
         
         // Generate additional content based on project
         this.generateProjectFeatures(project);
@@ -98,12 +114,17 @@ class ProjectDetailManager {
     
     generateProjectFeatures(project) {
         const featuresContainer = document.getElementById('projectFeatures');
-        
-        // Generate features based on technologies used
-        const features = this.getProjectFeatures(project);
-        featuresContainer.innerHTML = features
-            .map(feature => `<li>${feature}</li>`)
-            .join('');
+        const featuresSection = document.getElementById('projectFeaturesSection') || featuresContainer?.parentElement;
+        // Only render features when explicitly provided in the config as a non-empty array
+        if (!project.features || !Array.isArray(project.features) || project.features.length === 0 || (project.features.length === 1 && project.features[0] === '???')) {
+            if (featuresSection) featuresSection.style.display = 'none';
+            if (featuresContainer) featuresContainer.innerHTML = '';
+            console.log('ProjectDetail: no configured features for project', project.id, '- hiding section');
+            return;
+        }
+
+        if (featuresSection) featuresSection.style.display = '';
+        featuresContainer.innerHTML = project.features.map(feature => `<li>${feature}</li>`).join('');
     }
     
     getProjectFeatures(project) {
@@ -134,9 +155,17 @@ class ProjectDetailManager {
     
     generateProjectChallenges(project) {
         const challengesContainer = document.getElementById('projectChallenges');
-        
-        const challenges = this.getProjectChallenges(project);
-        challengesContainer.textContent = challenges;
+        const challengesSection = document.getElementById('projectChallengesSection') || challengesContainer?.parentElement;
+        // Only render challenges when explicitly provided in config as a non-empty array
+        if (!project.challenges || !Array.isArray(project.challenges) || project.challenges.length === 0 || (project.challenges.length === 1 && project.challenges[0] === '???')) {
+            if (challengesSection) challengesSection.style.display = 'none';
+            if (challengesContainer) challengesContainer.innerHTML = '';
+            console.log('ProjectDetail: no configured challenges for project', project.id, '- hiding section');
+            return;
+        }
+
+        if (challengesSection) challengesSection.style.display = '';
+        challengesContainer.innerHTML = project.challenges.map(c => `<p>${c}</p>`).join('');
     }
     
     getProjectChallenges(project) {
@@ -152,9 +181,17 @@ class ProjectDetailManager {
     
     generateProjectLearnings(project) {
         const learningsContainer = document.getElementById('projectLearnings');
-        
-        const learnings = this.getProjectLearnings(project);
-        learningsContainer.textContent = learnings;
+        const learningsSection = document.getElementById('projectLearningsSection') || learningsContainer?.parentElement;
+        // Only render learnings when explicitly provided in config as a non-empty array
+        if (!project.learnings || !Array.isArray(project.learnings) || project.learnings.length === 0 || (project.learnings.length === 1 && project.learnings[0] === '???')) {
+            if (learningsSection) learningsSection.style.display = 'none';
+            if (learningsContainer) learningsContainer.innerHTML = '';
+            console.log('ProjectDetail: no configured learnings for project', project.id, '- hiding section');
+            return;
+        }
+
+        if (learningsSection) learningsSection.style.display = '';
+        learningsContainer.innerHTML = project.learnings.map(l => `<p>${l}</p>`).join('');
     }
     
     getProjectLearnings(project) {
