@@ -398,6 +398,111 @@ class PerformanceOptimizer {
     }
 }
 
+// ===== PROJECT IMAGE RESIZER (dynamic expanded height) =====
+class ProjectImageResizer {
+    constructor() {
+        this.container = document.getElementById('projects-grid');
+        this.mutationObserver = null;
+        this.init();
+    }
+
+    init() {
+        if (!this.container) return;
+        // Attach to existing cards
+        this.attachToAll();
+
+        // Observe for new/removed cards (when View All toggles)
+        this.mutationObserver = new MutationObserver(() => {
+            // small debounce built-in
+            setTimeout(() => this.attachToAll(), 50);
+        });
+        this.mutationObserver.observe(this.container, { childList: true, subtree: true });
+
+        // Update on optimized resize
+        window.addEventListener('optimizedResize', () => this.updateAll());
+        // Fallback resize listener with local debounce (avoid referencing Utils before it's defined)
+        const debounce = (fn, wait) => {
+            let t;
+            return function(...args) {
+                clearTimeout(t);
+                t = setTimeout(() => fn.apply(this, args), wait);
+            };
+        };
+        window.addEventListener('resize', debounce(() => this.updateAll(), 150));
+    }
+
+    attachToAll() {
+        const cards = Array.from(this.container.querySelectorAll('.project-card'));
+        cards.forEach(card => this.attach(card));
+    }
+
+    attach(card) {
+        if (!card || card.__resizerAttached) return;
+        const desc = card.querySelector('.project-description');
+        if (!desc) return;
+
+        const updateHeight = () => {
+            // Respect reduced motion
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                const collapsed = getComputedStyle(document.documentElement).getPropertyValue('--project-image-collapsed-height') || '200px';
+                card.style.setProperty('--project-image-expanded-height', collapsed.trim());
+                return;
+            }
+
+            // Compute desired height: distance from top of card to bottom of description
+            const cardRect = card.getBoundingClientRect();
+            const descRect = desc.getBoundingClientRect();
+            // desired height in px relative to card
+            let desired = Math.round(descRect.bottom - cardRect.top);
+
+            // Ensure it's at least the collapsed height
+            const collapsedValue = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--project-image-collapsed-height')) || 200;
+            if (isNaN(desired) || desired < collapsedValue) desired = collapsedValue;
+
+            // Optionally cap desired to a reasonable maximum (prevent insane values)
+            const maxCap = Math.max(collapsedValue, card.clientHeight + 200);
+            if (desired > maxCap) desired = maxCap;
+
+            card.style.setProperty('--project-image-expanded-height', `${desired}px`);
+        };
+
+        // Update on mouseenter so calculation uses current layout
+        const onEnter = () => updateHeight();
+        // Also update when images inside load (their sizes can change layout)
+        const img = card.querySelector('.project-image img');
+        if (img && !img.complete) {
+            img.addEventListener('load', updateHeight);
+        }
+
+        // Mark attached and save cleanup
+        card.addEventListener('mouseenter', onEnter);
+        card.__resizerAttached = true;
+        card.__resizerCleanup = () => {
+            card.removeEventListener('mouseenter', onEnter);
+            if (img) img.removeEventListener('load', updateHeight);
+            card.__resizerAttached = false;
+        };
+
+        // Initial compute
+        updateHeight();
+    }
+
+    updateAll() {
+        if (!this.container) return;
+        this.container.querySelectorAll('.project-card').forEach(card => {
+            const desc = card.querySelector('.project-description');
+            if (!desc) return;
+            const cardRect = card.getBoundingClientRect();
+            const descRect = desc.getBoundingClientRect();
+            let desired = Math.round(descRect.bottom - cardRect.top);
+            const collapsedValue = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--project-image-collapsed-height')) || 200;
+            if (isNaN(desired) || desired < collapsedValue) desired = collapsedValue;
+            card.style.setProperty('--project-image-expanded-height', `${desired}px`);
+        });
+    }
+}
+
+
 // ===== UTILITY FUNCTIONS =====
 const Utils = {
     // Debounce function for performance
@@ -456,6 +561,8 @@ document.addEventListener('DOMContentLoaded', () => {
     new ThemeManager();
     new SpaceDecorations();
     new ProjectsGenerator();
+    // Initialize dynamic image resizer after projects are generated
+    new ProjectImageResizer();
     new FloatingImages();
     new NavbarScrollEffect();
     new AnimationObserver();
