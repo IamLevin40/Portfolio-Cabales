@@ -62,17 +62,10 @@ const PORTFOLIO_CONFIG = {
       featured: true,
       fullDescription: "Rooted (Alternate build) focuses on adjustable difficulty and adaptive prompts depending on player age. The game introduces a progressive challenge system and power-ups tied to environmental literacy achievements.",
       features: [
-        "Adaptive difficulty scaling",
-        "Power-ups unlocked by eco-friendly choices",
-        "Progressive vocabulary challenges"
       ],
       challenges: [
-        "Creating balanced difficulty progression",
-        "Designing engaging reward systems for learning"
       ],
       learnings: [
-        "Iteration on balancing game mechanics",
-        "Designing reward loops for educational outcomes"
       ]
     },
     {
@@ -86,17 +79,10 @@ const PORTFOLIO_CONFIG = {
       featured: true,
       fullDescription: "Rooted (Prototype) showcases core mechanics and the initial combat loop. This prototype explores how word complexity maps to attack potency and environmental modifiers influence enemy behavior.",
       features: [
-        "Prototype combat loop demonstrating word-attack mapping",
-        "Enemy behaviors influenced by environmental states",
-        "Simple level progression for testing"
       ],
       challenges: [
-        "Implementing reliable word validation logic",
-        "Testing edge-cases in prefix/suffix handling"
       ],
       learnings: [
-        "Rapid prototyping in Unity",
-        "Building modular game systems for later expansion"
       ]
     },
   ],
