@@ -10,12 +10,26 @@ class ProjectsGenerator {
     
     init() {
         if (!this.container) return;
-        
-        const config = window.PORTFOLIO_CONFIG;
-        if (!config || !config.projects) return;
-        
-        this.generateProjects();
-        this.setupViewAllButton();
+
+        console.log('ProjectsGenerator: init - checking config availability');
+        const tryInit = (attempts = 0) => {
+            const config = window.PORTFOLIO_CONFIG;
+            if (config && Array.isArray(config.projects)) {
+                this.generateProjects();
+                this.setupViewAllButton();
+                console.log('ProjectsGenerator: projects generated', config.projects.length);
+                return;
+            }
+
+            if (attempts < 10) {
+                // retry after a short delay
+                setTimeout(() => tryInit(attempts + 1), 100);
+            } else {
+                console.error('ProjectsGenerator: PORTFOLIO_CONFIG not available after retries');
+            }
+        };
+
+        tryInit();
     }
     
     generateProjects() {
@@ -56,9 +70,12 @@ class ProjectsGenerator {
                 <div class="project-technologies">
                     ${project.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
                 </div>
-                <button class="project-btn" onclick="viewProjectDetails(${project.id})">
-                    View Details
-                </button>
+                <div class="project-buttons">
+                    <button class="project-btn primary" onclick="openProject(${project.id})">Explore</button>
+                    <a href="${project.githubUrl}" class="project-btn secondary" target="_blank">
+                        <i class="fab fa-github"></i> Code
+                    </a>
+                </div>
             </div>
         `;
         
@@ -85,8 +102,9 @@ class ProjectsGenerator {
 
 // ===== PROJECT DETAIL NAVIGATION =====
 function viewProjectDetails(projectId) {
+    // store as fallback and navigate with query param
     localStorage.setItem('selectedProject', projectId);
-    window.location.href = 'projects/detail.html';
+    window.location.href = `projects/detail.html?id=${encodeURIComponent(projectId)}`;
 }
 
 // ===== SPACE DECORATIONS GENERATOR =====
@@ -560,7 +578,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize all components
     new ThemeManager();
     new SpaceDecorations();
-    new ProjectsGenerator();
+    // Create a named instance so we can re-run generation if needed
+    const projectsGenerator = new ProjectsGenerator();
     // Initialize dynamic image resizer after projects are generated
     new ProjectImageResizer();
     new FloatingImages();
@@ -571,6 +590,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add loading animation
     document.body.classList.add('loaded');
     
+    // Fallback: if projects grid is still empty after a moment, attempt to regenerate
+    setTimeout(() => {
+        const grid = document.getElementById('projects-grid');
+        if (grid && grid.children.length === 0) {
+            console.warn('Projects grid empty after init — retrying generateProjects()');
+            try {
+                projectsGenerator.generateProjects();
+            } catch (err) {
+                console.error('Retry failed to generate projects:', err);
+            }
+        }
+    }, 250);
     console.log('Portfolio website initialized successfully! 🚀');
 });
 

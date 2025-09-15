@@ -29,8 +29,10 @@ class ProjectDetailManager {
     }
     
     loadProjectData() {
-        // Get project ID from localStorage
-        const projectId = localStorage.getItem('selectedProject');
+        // Prefer project ID from URL query param (more reliable), fallback to localStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        const paramId = urlParams.get('id');
+        const projectId = paramId || localStorage.getItem('selectedProject');
         
         if (!projectId || !window.PORTFOLIO_CONFIG) {
             this.showError('Project not found');
@@ -257,8 +259,10 @@ function goBack() {
 }
 
 function navigateToProject(projectId) {
+    // prefer passing id in the url for deterministic loading
     localStorage.setItem('selectedProject', projectId);
-    window.location.reload();
+    // Use location.assign to navigate to detail page with id param
+    window.location.assign(`detail.html?id=${encodeURIComponent(projectId)}`);
 }
 
 // ===== INITIALIZE =====

@@ -119,6 +119,9 @@ const PORTFOLIO_CONFIG = {
   }
 };
 
+// Make config available globally for other scripts that reference window.PORTFOLIO_CONFIG
+window.PORTFOLIO_CONFIG = PORTFOLIO_CONFIG;
+
 // ===== EASY CUSTOMIZATION FUNCTIONS =====
 
 // Function to update personal info in HTML
@@ -203,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updatePersonalInfo();
   updateSocialLinks();
   updateMetaTags();
-  generateProjectCards();
+  // generateProjectCards(); // Disabled - handled by main.js ProjectsGenerator
   updateFooterInfo();
 });
 
@@ -237,8 +240,8 @@ function updateFooterInfo() {
 function openProject(projectId) {
   // Store the selected project ID in localStorage
   localStorage.setItem('selectedProject', projectId);
-  // Navigate to the project detail page
-  window.location.href = 'projects/detail.html';
+  // Navigate to the project detail page with query param for reliability
+  window.location.href = `projects/detail.html?id=${encodeURIComponent(projectId)}`;
 }
 
 // Function to get project by ID
