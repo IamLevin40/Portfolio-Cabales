@@ -42,10 +42,14 @@ const PORTFOLIO_CONFIG = {
       featured: true,
       fullDescription: "Rooted is a single-player, arcade-style educational game that merges word-building mechanics with environmental action and turn-based combat. Players battle eco-threats by forming new words from root words through the strategic use of prefixes and suffixes. Each valid word becomes an attack, with environmental words dealing double damage and triggering special effects.",
       features: [
-        "???"
+        "Word-building mechanics with prefix/suffix modifiers",
+        "Turn-based combat mapped to vocabulary strength",
+        "Environmental themes with educational prompts"
       ],
-      challenges: "???",
-      learnings: "???"
+      challenges: [
+      ],
+      learnings: [
+      ]
     },
     {
       id: 2,
@@ -56,12 +60,20 @@ const PORTFOLIO_CONFIG = {
       liveUrl: "#",
       githubUrl: "https://github.com/IamLevin40/Rooted",
       featured: true,
-      fullDescription: "Rooted is a single-player, arcade-style educational game that merges word-building mechanics with environmental action and turn-based combat. Players battle eco-threats by forming new words from root words through the strategic use of prefixes and suffixes. Each valid word becomes an attack, with environmental words dealing double damage and triggering special effects.",
+      fullDescription: "Rooted (Alternate build) focuses on adjustable difficulty and adaptive prompts depending on player age. The game introduces a progressive challenge system and power-ups tied to environmental literacy achievements.",
       features: [
-        "???"
+        "Adaptive difficulty scaling",
+        "Power-ups unlocked by eco-friendly choices",
+        "Progressive vocabulary challenges"
       ],
-      challenges: "???",
-      learnings: "???"
+      challenges: [
+        "Creating balanced difficulty progression",
+        "Designing engaging reward systems for learning"
+      ],
+      learnings: [
+        "Iteration on balancing game mechanics",
+        "Designing reward loops for educational outcomes"
+      ]
     },
     {
       id: 3,
@@ -72,12 +84,20 @@ const PORTFOLIO_CONFIG = {
       liveUrl: "#",
       githubUrl: "https://github.com/IamLevin40/Rooted",
       featured: true,
-      fullDescription: "Rooted is a single-player, arcade-style educational game that merges word-building mechanics with environmental action and turn-based combat. Players battle eco-threats by forming new words from root words through the strategic use of prefixes and suffixes. Each valid word becomes an attack, with environmental words dealing double damage and triggering special effects.",
+      fullDescription: "Rooted (Prototype) showcases core mechanics and the initial combat loop. This prototype explores how word complexity maps to attack potency and environmental modifiers influence enemy behavior.",
       features: [
-        "???"
+        "Prototype combat loop demonstrating word-attack mapping",
+        "Enemy behaviors influenced by environmental states",
+        "Simple level progression for testing"
       ],
-      challenges: "???",
-      learnings: "???"
+      challenges: [
+        "Implementing reliable word validation logic",
+        "Testing edge-cases in prefix/suffix handling"
+      ],
+      learnings: [
+        "Rapid prototyping in Unity",
+        "Building modular game systems for later expansion"
+      ]
     },
   ],
   
