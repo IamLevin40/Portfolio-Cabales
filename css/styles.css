@@ -258,10 +258,17 @@ body::before {
   text-shadow: none;
 }
 
+/* Light-mode: keep nav link text at the dark-mode text-light value and prevent hover color change */
+[data-theme="light"] .nav-link,
+[data-theme="light"] .nav-link:hover {
+  color: #e0e0e0 !important; /* same as dark-mode --text-light */
+  text-shadow: none;
+}
+
 .theme-toggle {
   background: none;
   border: 2px solid var(--color-primary);
-  color: var(--text-white);
+  color: var(--text-light); /* always use text-light for the icon/text */
   width: 45px;
   height: 45px;
   border-radius: 50%;
@@ -276,6 +283,13 @@ body::before {
 .theme-toggle:hover {
   background: var(--color-primary);
   transform: scale(1.1);
+  color: var(--text-light); /* keep icon color unchanged on hover */
+}
+
+/* Ensure theme toggle icon color remains consistent in light-mode as well */
+[data-theme="light"] .theme-toggle,
+[data-theme="light"] .theme-toggle:hover {
+  color: var(--text-light) !important;
 }
 
 /* ===== HOME SECTION ===== */
