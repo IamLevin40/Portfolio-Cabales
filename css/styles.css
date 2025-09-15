@@ -5,7 +5,7 @@
   --color-primary: #393F8A;
   --color-secondary: #65558D;
   --color-neon: #1aaef3;
-  --color-neon-secondary: #f51e50;
+  --color-neon-secondary: #ff27d7;
   --color-accent: #7c3aed;
   --text-white: #ffffff;
   --text-light: #e0e0e0;
@@ -13,8 +13,8 @@
   --nav-bg: rgba(33, 33, 46, 0.95);
   --card-bg: rgba(57, 63, 138, 0.1);
   --border-color: rgba(101, 85, 141, 0.3);
-  --shadow-neon: 0 0 8px rgba(11, 206, 232, 0.3);
-  --shadow-neon-pink: 0 0 8px rgba(223, 18, 121, 0.3);
+  --shadow-neon: 0 0 8px rgba(16, 152, 170, 0.8);
+  --shadow-neon-pink: 0 0 8px rgba(253, 45, 118, 0.8);
   
   /* Light Theme Colors */
   --bg-primary-light: #f1f3f7;
@@ -49,6 +49,9 @@
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
+  /* Project image hover sizes (can be overridden per-card) */
+  --project-image-collapsed-height: 200px;
+  --project-image-expanded-height: 320px; /* tuned to stop before tech-tags by default */
 }
 
 /* Light Theme Overrides */
@@ -220,7 +223,7 @@ body::before {
 }
 
 .nav-link {
-  color: var(--color-neon);
+  color: var(--text-white); /* Always white text */
   text-decoration: none;
   font-size: var(--font-size-base);
   font-weight: 500;
@@ -229,30 +232,46 @@ body::before {
   transition: color var(--transition-fast);
 }
 
+
+/* Underline hidden by default; animate with left-to-right wipe using scaleX */
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: -1px; /* slightly below the text */
   left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-neon-secondary), var(--color-neon));
-  transition: width var(--transition-normal);
+  width: 100%;
+  height: 4px; /* thicker line */
+  background: var(--color-neon); /* base color when visible (single hue) */
+  transform: scaleX(0);
+  transform-origin: left center; /* wipe left -> right on reveal */
+  transition: transform var(--transition-normal), background-color var(--transition-normal), opacity var(--transition-normal);
+  border-radius: 4px;
+  opacity: 0; /* fully hidden by default */
 }
 
 .nav-link:hover::after {
-  width: 100%;
+  transform: scaleX(1);
+  opacity: 1;
+  background: var(--color-neon-secondary); /* single-hue neon-secondary on hover */
 }
 
+/* Ensure link text doesn't change color on hover */
 .nav-link:hover {
-  color: var(--color-neon-secondary);
-  text-shadow: 0 0 8px var(--color-neon-secondary);
+  color: var(--text-white);
+  text-shadow: none;
+}
+
+/* Light-mode: keep nav link text at the dark-mode text-light value and prevent hover color change */
+[data-theme="light"] .nav-link,
+[data-theme="light"] .nav-link:hover {
+  color: #e0e0e0 !important; /* same as dark-mode --text-light */
+  text-shadow: none;
 }
 
 .theme-toggle {
   background: none;
   border: 2px solid var(--color-primary);
-  color: var(--text-white);
+  color: var(--text-light); /* always use text-light for the icon/text */
   width: 45px;
   height: 45px;
   border-radius: 50%;
@@ -267,6 +286,13 @@ body::before {
 .theme-toggle:hover {
   background: var(--color-primary);
   transform: scale(1.1);
+  color: var(--text-light); /* keep icon color unchanged on hover */
+}
+
+/* Ensure theme toggle icon color remains consistent in light-mode as well */
+[data-theme="light"] .theme-toggle,
+[data-theme="light"] .theme-toggle:hover {
+  color: var(--text-light) !important;
 }
 
 /* ===== HOME SECTION ===== */
@@ -516,7 +542,7 @@ body::before {
   border: 1px solid var(--border-color);
   border-radius: 20px;
   overflow: hidden;
-  transition: all var(--transition-normal);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
   backdrop-filter: blur(10px);
   position: relative;
 }
@@ -537,10 +563,12 @@ body::before {
   mask-composite: exclude;
   opacity: 0;
   transition: opacity var(--transition-normal);
+  /* place the decorative border above the image but below the content */
+  z-index: 1;
 }
 
 .project-card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-8px);
   box-shadow: 0 20px 40px rgba(57, 63, 138, 0.3), var(--shadow-neon);
 }
 
@@ -549,26 +577,70 @@ body::before {
 }
 
 .project-image {
-  height: 200px;
+  /* position image absolutely so changing its size does not affect document flow */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: var(--project-image-collapsed-height);
   overflow: hidden;
+  transition: height 450ms cubic-bezier(.2,.9,.2,1), box-shadow var(--transition-normal), transform var(--transition-slow);
+  z-index: 0; /* behind the decorative glow (z=1) and content (z=2/3) */
+}
+
+/* Overlay that appears on hover: same size as the image, gradient black (bottom -> top)
+   using ::after so it's automatically sized and animatable. It sits above the image but
+   below the `.project-content` (z-index control). */
+.project-image::after {
+  content: '';
+  position: absolute;
+  inset: 0; /* fill the image area */
+  background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0.5));
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 300ms cubic-bezier(.2,.9,.2,1), transform 300ms cubic-bezier(.2,.9,.2,1);
+  pointer-events: none; /* allow clicks to pass through to buttons/content */
+  z-index: 1; /* above the image (z=0) but below the decorative glow (z=1) and .project-content (z=3) */
+}
+
+.project-card:hover .project-image::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-image::after {
+    transition: none;
+    opacity: 1; /* immediate show for reduced motion users if hovered */
+  }
 }
 
 .project-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--transition-slow);
+  transition: transform var(--transition-slow), opacity var(--transition-normal);
+}
+
+/* On hover the image block expands downward smoothly. The image inside will pan/scale slightly
+   to reveal more and create a smooth visual extension that stops before the tech-tags area. */
+.project-card:hover .project-image {
+  height: var(--project-image-expanded-height);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
 
 .project-card:hover .project-image img {
-  transform: scale(1.1);
-  filter: brightness(1.1) contrast(1.1);
+  transform: translateY(-6%) scale(1.12);
+  filter: brightness(1.05) contrast(1.05);
+  opacity: 0.98;
 }
 
 .project-content {
-  padding: var(--spacing-lg);
+  padding: calc(var(--spacing-lg) + var(--project-image-collapsed-height)) var(--spacing-lg) var(--spacing-lg);
   position: relative;
-  z-index: 1;
+  z-index: 3; /* above the decorative glow and image */
+  background: transparent; /* ensure image can show beneath if desired */
 }
 
 .project-name {
@@ -591,7 +663,7 @@ body::before {
 }
 
 .project-card:hover .project-description {
-  color: var(--color-neon-secondary);
+  color: var(--text-light); /* keep description readable and consistent on hover */
 }
 
 .project-description {
@@ -733,6 +805,11 @@ body::before {
   padding: var(--spacing-xxl) 0 var(--spacing-lg);
   margin-top: var(--spacing-xxl);
   backdrop-filter: blur(10px);
+}
+
+/* Light mode: use a solid background for footer (no gradient) */
+[data-theme="light"] .footer {
+  background: var(--bg-primary) !important;
 }
 
 .footer-container {
@@ -923,6 +1000,15 @@ body::before {
   .projects-grid {
     grid-template-columns: 1fr;
     gap: var(--spacing-lg);
+  }
+
+  /* Reduce/disable project image expansion on tablet/mobile to avoid layout overflow */
+  .project-image {
+    height: calc(var(--project-image-collapsed-height) - 40px);
+  }
+
+  .project-card:hover .project-image {
+    height: calc(var(--project-image-collapsed-height) - 40px);
   }
 }
 
